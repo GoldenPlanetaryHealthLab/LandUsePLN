@@ -1,0 +1,11 @@
+default:
+  # the default pipeline comes from https://esa-worldcover.org/en
+  inputs:
+    countries:
+      - NPL
+      - MDG
+    years:
+      - 2021
+    gdrive_paths: 
+        - "/n/holylabs/LABS/cgolden_lab/Lab/data_freeze/golden_googledrive_rclone/Climate-Smart Public Health - Madagascar/4. Datasets/Health Data/National clinic data/Clean/healthsheds2022"
+        - "/n/holylabs/LABS/cgolden_lab/Lab/data_freeze/golden_googledrive_rclone/Climate-Smart Public Health - Nepal/4. Datasets/aggregations_pipeline"

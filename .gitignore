@@ -4,3 +4,11 @@
 .DS_Store
 .httr-oauth
 .quarto
+inst/doc
+docs
+.Renviron
+
+sandbox
+**globus*
+/Meta/
+data*

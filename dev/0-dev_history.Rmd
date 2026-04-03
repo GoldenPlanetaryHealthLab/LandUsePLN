@@ -16,15 +16,20 @@ All commands that you use to use when developing packages...
 fusen::fill_description(
   pkg = here::here(),
   fields = list(
-    Title = "Build A Package From Rmarkdown File",
-    Description = "Use Rmarkdown First method to build your package. Start your package with documentation. Everything can be set from a Rmarkdown file in your project.",
+    Title = "Access Land Use Data in R",
+    Description = "This pipeline provides access to land use data endpoints. It is designed to be flexible and adaptable 
+    to various data sources and formats, allowing users to easily retrieve and analyze land use data for their specific needs.
+    The current pipeline retrieves land use data from the [ESA World Cover](https://esa-worldcover.org/en) dataset.",
     `Authors@R` = c(
-      person("John", "Doe", email = "john@email.me", role = c("aut", "cre"), comment = c(ORCID = "0000-0000-0000-0000"))
+      person(given = c("Tinashe", "Michael"), family = "Tapera", email = "ttapera@hsph.harvard.edu", role = c("aut", "cre")),
+      person(given = c("Christina"), family = "Draeger", email = "christina.draeger@posteo.de", role = c("com")),
+      person(given = c("Christopher"), family = "Golden", email = "golden@hsph.harvard.edu", role = c("cph"))
     )
-  )
+  ),
+  overwrite=TRUE
 )
 # Define License with use_*_license()
-usethis::use_mit_license("John Doe")
+usethis::use_mit_license("Tinashe Michael Tapera")
 ```
 
 # All-in-one function to deploy publicly on GitHub
@@ -56,7 +61,7 @@ remotes::install_local()
 # README
 usethis::use_readme_rmd()
 # Code of Conduct
-usethis::use_code_of_conduct("contact@fake.com")
+usethis::use_code_of_conduct("ttapera@hsph.harvard.edu")
 # NEWS
 usethis::use_news_md()
 ```
@@ -130,3 +135,29 @@ devtools::build(vignettes = TRUE)
 fusen::init_share_on_github()
 ```
 
+# Extra Packages for VSCode, `renv`, and `targets`
+
+```{r}
+renv::init()
+
+remotes::install_github("nx10/httpgd") #
+
+install.packages(c(
+  "languageserver", # R language server
+  "rlang", # language server support
+  "jsonlite", # JSON support
+  "remotes", # VSCode R tools
+  "config", # for fusen config mgmt
+  "parsermd",
+  "visNetwork"
+))
+
+
+renv::install("fledge")
+fledge::update_news()
+
+renv::install("targets")
+renv::install("ropensci/tarchetypes")
+
+targets::use_targets()
+```

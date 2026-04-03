@@ -1,0 +1,91 @@
+---
+title: "flat_download_landcover_geodata.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+# Downloading Land Cover with the `geodata` Package
+
+Fortunately, most of the work of interacting with the ESA WorldCover API is handled by the `geodata` package. 
+This package provides a convenient interface for downloading and processing geospatial data from
+the ESA WorldCover API, including land cover datasets.
+
+```{r}
+library(geodata)
+```
+
+Using this library is very straightforward — you just provide the
+type of land cover you want, and an output dir:
+
+```{r}
+landcover_trees <- landcover("trees", path = tempdir())
+landcover_trees
+```
+
+Clearly this will need a bounding box, since the API
+just fetches data for all the globe. To do this,
+we can reference `graydon`'s bounding boxes in the
+`country-bounding-boxes` package, which we have included as a dependency.
+We source this function with `reticulate` to get the bounding box for Madagascar:
+
+```{r}
+library(reticulate)
+```
+
+```{r}
+source_python("inst/get_bounding_box_for_iso_code.py")
+x <- get_bounding_box_for_iso_code("MDG")
+box <- x$bbox
+box
+```
+
+Great, so that is how we will get the bounding box. How does it
+get used to get a portion of the land use slice?
+
+```{r}
+
+```
+
+```{r development-download_landcover_geodata}
+# Prepare the code of your function here
+```
+
+```{r function-download_landcover_geodata}
+#' download_landcover_geodata Title
+#'
+#' @return 1
+#' @export
+#'
+#' @examples
+download_landcover_geodata <- function() {
+  1
+}
+```
+
+```{r examples-download_landcover_geodata}
+download_landcover_geodata()
+```
+
+```{r tests-download_landcover_geodata}
+test_that("download_landcover_geodata works", {
+  expect_true(inherits(download_landcover_geodata, "function"))
+})
+```
+
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/flat_download_landcover_geodata.Rmd", vignette_name = "Go further")
+```
+

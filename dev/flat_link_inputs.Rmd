@@ -1,0 +1,116 @@
+---
+title: "flat_link_inputs.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+
+library(here)
+```
+
+# link_inputs
+
+Here we're defining a simple function that symlinks the input data to 
+the local data directory. This makes it easy to work with data stored
+on the google drive, copied to FASRC.
+
+```{r development-link_inputs}
+# Prepare the code of your function here
+```
+
+```{r function-link_inputs}
+#' Symlink Google Drive Data Space to Local Data Directory
+#'
+#' This function creates a symbolic link from a Google Drive data space (specified in a config file)
+#' to a local "data" directory. It checks for the existence of the Google Drive path and the local
+#' data directory, creates the local directory if it does not exist, and then creates the symlink.
+#' 
+#' @importFrom cli cli_abort cli_alert_info cli_alert_success
+#' @importFrom here here
+#' @importFrom purrr map pluck
+#'
+#' @param cfg_path Character. Path to the configuration file containing the Google Drive data space path.
+#'
+#' @return Logical. Returns TRUE if the linking is successful; otherwise, stops with an error.
+#'
+#' @examples
+#' \dontrun{
+#' link_inputs("config.yml")
+#' }
+#' 
+#' @export
+link_inputs <- function(cfg_path) {
+
+  cfg <- config::get(file = cfg_path)
+
+  gdrive_paths <- cfg %>%
+    flatten() %>%
+    pluck("gdrive_paths")
+
+  if (is.null(gdrive_paths)) {
+    cli_abort("Please provide the path to the google drive data space in the config file")
+  }
+
+  if (
+    any(
+      map(gdrive_paths, function(path) !dir.exists(path)) %>% unlist()
+    )
+   ) {
+    cli_abort("One or more of the provided gdrive_paths does not exist: {gdrive_paths}")
+  }
+
+  # this is what makes the pipeline portable across systems
+  local_data_dir <- here::here("data")
+  if (!dir.exists(local_data_dir)) {
+    dir.create(local_data_dir)
+  }
+  
+  cli_alert_info("Linking the google drive data space to the local Data directory: {gdrive_paths}")
+  map(gdrive_paths, function(path) file.symlink(path, local_data_dir))
+
+  # only succeed if they all worked
+  if ( 
+    all( 
+      map(
+        gdrive_paths, function(path) {
+          dir.exists(
+            file.path(local_data_dir, basename(path))
+          )
+        }
+      )
+    )
+  ) {
+    
+    cli_alert_success("Linking successful!")
+  
+  } else {
+    
+    cli_abort("Linking failed!")
+  
+  }  
+
+  list.files(local_data_dir, recursive=TRUE, full.names=TRUE)
+}
+```
+
+```{r tests-link_inputs}
+test_that("link_inputs works", {
+  expect_true(inherits(link_inputs, "function"))
+})
+```
+
+We'll use this notebook to develop tracking for individual raw data files.
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/flat_link_inputs.Rmd", vignette_name = "Linking Input Data", open = FALSE, check=FALSE)
+```
