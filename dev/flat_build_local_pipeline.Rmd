@@ -1,0 +1,263 @@
+---
+title: "flat_build_local_pipeline.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+## Preamble
+
+The primary distribution mechanism of our data in the lab is via a
+`targets` pipeline. `targets` is a powerful R package for
+orchestrating data analysis pipelines. It helps manage dependencies,
+ensures reproducibility, and optimizes performance by only rerunning
+the parts of the pipeline that have changed.
+
+In the lab, we separate the technical concerns of data storage, processing, analysis,
+and reporting into distinct workspaces:
+
+1. Storage: Each project's raw data is stored in a dedicated data repository on Google Drive (`Drive / <PROJECT> / 4. Datasets / <DATASET NAME>`).
+  That dataset is _mirrored_ to FASRC via `rclone` for processing. To work on your
+  own project, you must be on FASRC -- the pipeline will then _symlink_ the google drive data to your
+  local "data/" directory using the `link_inputs()` function defined in the pipeline.
+2. Processing and Analysis: The `targets` pipeline handles preliminary data processing
+  and analysis. It reads raw data from the "data/" directory, processes it,
+  and generates intermediate datasets and analysis results in your local workspace. To do this, simply:
+    - Install this package in your local project space using `remotes::install_github()`.
+    - Load the package using `library(your_package_name)`.
+    - Run the `targets` pipeline by executing `tar_make()` in the R console. This will execute all defined targets, processing the data and generating clean datasets.
+    - Access the processed data and analysis results stored in the `_targets/` directory using `tar_load()` or other `targets` functions.
+3. Analysis: Once you've run the `targets` pipeline, you can access the processed data
+  and analysis results stored in the `_targets/` directory. This data is then used
+  for further analysis and reporting.
+4. Reporting: Your modelling and analysis are conducted on your own in the project space,
+  using the processed data outputs from the `targets` pipeline. You can create reports,
+  visualizations, and other outputs based on the analysis results. I recommend using 
+  Quarto for this purpose.
+5. Sharing: Finally, when you are ready to share your work, use the respective project's
+  `5. Data & Code Elements` Google Drive folder. This folder is intended for sharing
+  intermediate data products — not raw or final data. You should always be able to reproduce
+  any data product shared here by running the `targets` pipeline from raw data, and then rerunning
+  your own analysis code.
+
+# build_local_pipeline
+
+This is a convenience function that can build the targets pipeline for the user
+in their local project. It does this by providing skeleton code for the targets file,
+as well as the list of necessary targets in a separate Quarto file, which is converted
+to targets objects via `tarchetypes::tar_tangle()`
+
+```{r development-libraries}
+library(glue)
+library(readr)
+library(stringr)
+library(dplyr)
+library(fs)
+library(here)
+```
+
+```{r development-build_local_pipeline}
+# Prepare the code of your function here
+```
+
+```{r function-build_local_pipeline}
+#' Build Targets Pipeline
+#'
+#' Dynamically build the targets pipeline for the project.
+#' 
+#' This function sets up the targets pipeline by defining a local `_targets.R` file
+#' and using `tar_tangle()` to create the necessary targets from an Rmd file.
+#' The Rmd file is, itself, this vignette — Pipeline Definition.
+#' 
+#' @importFrom here here
+#' @return 1
+#' @export
+build_local_pipeline <- function(
+  targets_notebook_name = "_target_notebook.Rmd", 
+  targets_file_name = "_targets.R", 
+  pkg_name = "MadagascarWeatherStations", 
+  vignette_name = "pipeline-definition.Rmd",
+  overwrite = FALSE
+  ) {
+  
+  # Define the path to the targets notebook definition and file
+  targets_notebook <- here::here(targets_notebook_name)
+  targets_file <- here::here(targets_file_name)
+
+  # fetch this installed vignette
+  # v <- vignette(vignette_name, package = pkg_name)
+  # vignette_path <- fs::path(v$Dir, "doc", v$File)
+
+  vignette_path <- system.file(vignette_name, package = pkg_name)
+
+  # assert that the vignette exists
+  if (!fs::file_exists(vignette_path)) {
+    cli::cli_alert_danger("Vignette '{vignette_name}' not found in package '{pkg_name}'.")
+    stop("Cannot proceed without the vignette file.")
+  }
+
+  # copy to local project
+  fs::file_copy(vignette_path, targets_notebook, overwrite = overwrite)
+  # remove irrelevant quarto directives
+  lines <- readr::read_lines(targets_notebook) %>%
+    stringr::str_subset("#\\| eval: no", negate = TRUE)
+  writeLines(lines, targets_notebook)
+  cli::cli_alert_success("Created local targets notebook file at: {targets_notebook}")
+
+  # fetch the installed template for _targets.R
+  template_path <- system.file("_targets.R", package = pkg_name)
+
+  # copy to local project
+  fs::file_copy(template_path, targets_file, overwrite = overwrite)
+  cli::cli_alert_success("Created local targets file at: {targets_file}")
+
+  # replace the tar_tangle() default to use the local notebook name
+  if(targets_notebook_name != "_target_notebook.Rmd") {
+    
+    xfun::gsub_file(
+      targets_file,
+      pattern = "_target_notebook.Rmd",
+      replacement = targets_notebook_name
+    )
+    cli::cli_alert_success("Updated targets file to use targets notebook: {targets_notebook_name}")
+    
+  }
+
+  cli::cli_alert_info("To build the base pipeline, run `targets::tar_make()` in your R console. Use `targets::tar_read()` or `targets::tar_load()` to access target outputs.")
+  cli::cli_alert_info("You can also edit the targets file to extend the pipeline as needed for your project.")
+
+  return(invisible())
+}
+```
+
+```{r examples-build_local_pipeline}
+#build_local_pipeline()
+```
+
+```{r tests-build_local_pipeline}
+test_that("build_local_pipeline works", {
+  expect_true(inherits(build_local_pipeline, "function"))
+})
+```
+
+# Pipeline Definition
+
+Below we define the actual targets of the pipeline using `tar_tangle()`.
+
+## Config
+
+A YAML config file is used to define parameters for the pipeline. At present,
+the only important parameter is the path to the raw data repository on FASRC.
+
+```{r, eval=FALSE}
+#| format: file
+
+cfg <- system.file("config.yml", package = "MadagascarWeatherStations")
+```
+
+## Raw Data Linking
+
+We use the function `link_inputs()` to symlink the raw data from the data repository
+to your local "data/" directory. If successful, stores the full list of files in the raw data.
+
+
+```{r, eval=FALSE}
+#| error: stop
+#| format: file
+raw_data_dir <- link_inputs(cfg_path = cfg)
+```
+
+## Track Inputs
+
+Secondly, we track the raw data files using targets. Whenever
+new files are added to the google drive, they get mirrored
+to FASRC, which will trigger this pipeline to rerun:
+
+```{r, eval=FALSE}
+#| format: file
+raw_data_files <- list.files(raw_data_dir, recursive=T, full.names=T)
+```
+
+## Merge Indoor Data
+
+We use our `clean_and_merge_indoor()` function to read in the raw data files, clean them, and merge them into a single dataset. This is the first step of our data processing pipeline, and it ensures that all raw data files are standardized and combined for further analysis.
+
+```{r, eval=FALSE}
+#| packages: [dplyr, stringr]
+#| format: file
+indoor_files <- raw_data_files %>% 
+  str_subset("Logger_Intake")
+```
+
+```{r, eval=FALSE}
+#| packages: [dplyr, readxl, purrr, janitor, lubridate, tidyr]
+indoor_sensor_database <- map(indoor_files, clean_and_merge_indoor) %>%
+  bind_rows()
+```
+
+## Fetch Weather Station Data
+
+Our next task is to fetch the weather station data for our devices.
+We use the `fetch_updated_data()` function to retrieve the latest data
+from our weather stations via the Ambient Weather API. This function 
+is designed to fetch data for each device and return it in a 
+standardized format for visualization and distribution for analysis.
+
+```{r, eval=FALSE}
+#| packages: [ambientweatheR, purrr, dplyr, httr2]
+devices <- paste0(
+  "https://api.ambientweather.net/v1/devices?applicationKey=", 
+  get_or_set_application_key(),
+  "&apiKey=", get_or_set_api_key()
+  ) %>%
+  request() %>%
+  req_perform() %>%
+  resp_body_json() %>%
+  map(flatten) %>% 
+  map_chr(pluck, "macAddress")
+```
+
+```{r, eval=FALSE}
+#| packages: [ambientweatheR, purrr, dplyr, httr2, cli, fs, nanoparquet]
+# fetch all data from all devices, starting from the most recent date in the existing database
+weather_data_update <- map_dfr(devices, ~ fetch_updated_data(device_id = .x, lookback = -1))
+```
+
+Next, we save that data out by using our `dump_to_disk()` function, which saves the data to a specified directory in a standardized [parquet](https://nanoparquet.r-lib.org/index.html) format. 
+This ensures that the fetched weather station data is stored in an organized manner for future analysis and reference.
+
+> Note: this may appear as an antipattern because `targets` automatically tracks files,
+and can do so in parquet, however, we want to have persistent outputs that cannot be accidentally
+deleted by `targets`'s internal garbage collection. By writing to disk directly, we 
+ensure that the raw fetched data is preserved and can be accessed independently of the pipeline's
+ internal management. This also allows us to maintain a historical record of the fetched data.
+
+```{r, eval=FALSE}
+#| packages: [here, dplyr, purrr, nanoparquet, arrow, fs, glue]
+#| format: file
+ambient_weather_station_database <- dump_to_disk(weather_data_update)
+```
+
+From here, we allow the `maestro` package to take over scheduling
+the pipeline run. `maestro` will manually invalidate the database
+file hash, which will trigger the pipeline to rerun and process new data.
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/flat_build_local_pipeline.Rmd", vignette_name = "Pipeline Definition", check=FALSE, open=FALSE, clean=TRUE)
+```
+
+```{r development-copy, eval=FALSE}
+# Also copy the pipeline-definition.Rmd to inst/
+fs::file_copy("vignettes/pipeline-definition.Rmd", "inst/pipeline-definition.Rmd", overwrite = TRUE)
+```
