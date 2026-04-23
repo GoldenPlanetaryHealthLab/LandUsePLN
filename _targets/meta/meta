@@ -1,7 +1,15 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
 cfg|stem||fb3e3d7df4d53c97|2c530c1562a7fbd1|1339945205||t20546.2213629749s||0|file|local|vector|||0.111||could not find function '%>%'
 cfg_path|stem|6354cb4e9cda4ed1|fb3e3d7df4d53c97|2c530c1562a7fbd1|1927180528|/n/holylabs/cgolden_lab/Lab/projects/tinashe_land_use/LandUsePLN/config.yml|t20546.2231293231s|s511b|511|file|local|vector|||0.176||
-.Random.seed|object|621f733f74524fe2
+input_files|stem|cfabfaadf92b669b|cf69096f1707ccd2|5af30a20ccd47df0|872109100|/n/holylabs/cgolden_lab/Lab/projects/tinashe_land_use/LandUsePLN/data/aggregations_pipeline/Nepal_Healthsheds2024.zip*/n/holylabs/cgolden_lab/Lab/projects/tinashe_land_use/LandUsePLN/data/aggregations_pipeline/SHP_Final.shp*/n/holylabs/cgolden_lab/Lab/projects/tinashe_land_use/LandUsePLN/data/healthsheds2022/healthsheds2022.dbf*/n/holylabs/cgolden_lab/Lab/projects/tinashe_land_use/LandUsePLN/data/healthsheds2022/healthsheds2022.prj*/n/holylabs/cgolden_lab/Lab/projects/tinashe_land_use/LandUsePLN/data/healthsheds2022/healthsheds2022.shp*/n/holylabs/cgolden_lab/Lab/projects/tinashe_land_use/LandUsePLN/data/healthsheds2022/healthsheds2022.shx|t20200.8184722222s|s52892572b|52892572|file|local|vector|||0.202|coercing argument of type 'list' to logical|
+crop_landcover_with_box|function|d2abd60ab4ad88b0
+get_bounding_box_for_iso_code|function|c1b290e6a954728f
+.Random.seed|object|0ef3a3ef410ee4d7
 link_inputs|function|06ca0b8df94deeb4
 build_local_pipeline|function|21045c962727fb9b
-input_files|stem|cfabfaadf92b669b|cf69096f1707ccd2|5af30a20ccd47df0|872109100|/n/holylabs/cgolden_lab/Lab/projects/tinashe_land_use/LandUsePLN/data/aggregations_pipeline/Nepal_Healthsheds2024.zip*/n/holylabs/cgolden_lab/Lab/projects/tinashe_land_use/LandUsePLN/data/aggregations_pipeline/SHP_Final.shp*/n/holylabs/cgolden_lab/Lab/projects/tinashe_land_use/LandUsePLN/data/healthsheds2022/healthsheds2022.dbf*/n/holylabs/cgolden_lab/Lab/projects/tinashe_land_use/LandUsePLN/data/healthsheds2022/healthsheds2022.prj*/n/holylabs/cgolden_lab/Lab/projects/tinashe_land_use/LandUsePLN/data/healthsheds2022/healthsheds2022.shp*/n/holylabs/cgolden_lab/Lab/projects/tinashe_land_use/LandUsePLN/data/healthsheds2022/healthsheds2022.shx|t20200.8184722222s|s52892572b|52892572|file|local|vector|||0.202|coercing argument of type 'list' to logical|
+download_landcover_geodata|function|8a9e72b7e8c62589
+land_cover_types|stem|ccf9fb72755e03c1|e864a68fdd41d863|2c530c1562a7fbd1|655031293||t20566.8340599902s|s379b|379|rds|local|vector|||0.114||
+years|stem|3fd58669e91cd6f2|784233faddb41c39|ab1dfed5197d7a8d|-251243143||t20566.8340636712s|s51b|51|rds|local|vector|||0.002||
+countries|stem|30eb68468b9184b5|d07362da6424303b|ab1dfed5197d7a8d|-908544810||t20566.8340641961s|s60b|60|rds|local|vector|||0.001||
+mdg_healthshed|stem|3806607604957d7b|e816586674cb78f8|da1f633108360868|-1158592237|/n/holylabs/cgolden_lab/Lab/projects/tinashe_land_use/LandUsePLN/data/healthsheds2022/healthsheds2022.shp|t19760.7161458333s|s23730268b|23730268|file|local|vector|||0.418||
+npl_healthshed|stem|39a5910968a39897|b949b049902fd2e9|da1f633108360868|748817262|/n/holylabs/cgolden_lab/Lab/projects/tinashe_land_use/LandUsePLN/data/aggregations_pipeline/SHP_Final.shp|t20196.6501157407s|s13898849b|13898849|file|local|vector|||0||

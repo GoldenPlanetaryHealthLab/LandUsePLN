@@ -6,8 +6,9 @@
 \usage{
 get_bounding_box_for_iso_code(
   iso_code = "NPL",
-  python_file = system.file("get_bounding_box_for_iso_code.py", package = "LandUsePLN"),
-  reticulate_python_env = "landuse"
+  python_file = system.file("py/get_bounding_box_for_iso_code.py", package =
+    "LandUsePLN"),
+  reticulate_python_env = "/n/home03/ttapera/.local/share/mamba/envs/landuse"
 )
 }
 \arguments{

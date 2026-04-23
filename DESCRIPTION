@@ -31,7 +31,6 @@ Imports:
     xfun
 Suggests: 
     dplyr,
-    geotargets,
     knitr,
     rmarkdown,
     testthat

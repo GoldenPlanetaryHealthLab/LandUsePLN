@@ -51,11 +51,13 @@ library(reticulate)
 library(cli)
 library(dplyr)
 library(purrr)
+library(here)
 ```
 
 
 ```{r}
-source_python("inst/get_bounding_box_for_iso_code.py")
+reticulate::use_condaenv("/n/home03/ttapera/.local/share/mamba/envs/landuse", required = TRUE)
+source_python(here("inst/py/get_bounding_box_for_iso_code.py"))
 x <- get_bounding_box_for_iso_code_py("MDG")
 box <- x$bbox
 box

@@ -64,13 +64,14 @@ download_landcover_geodata <- function(
   country_code = "NPL",
   cover_type = "trees",
   tmp_path = tempdir(),
+  reticulate_python_env = "/n/home03/ttapera/.local/share/mamba/envs/landuse",
   plot_invisible = FALSE
   ) {
   
   # get the full tiff
   landcover_full <- landcover(cover_type, path = tmp_path)
   # get the bounding box for the country
-  bounding_box <- get_bounding_box_for_iso_code(country_code)
+  bounding_box <- get_bounding_box_for_iso_code(country_code, reticulate_python_env = reticulate_python_env)
   # crop the landcover to the bounding box
   landcover_cropped <- crop_landcover_with_box(landcover_full, bounding_box, plot_invisible = plot_invisible)
 
@@ -106,8 +107,8 @@ download_landcover_geodata <- function(
 #' get_bounding_box_for_iso_code("NPL")
 get_bounding_box_for_iso_code <- function(
   iso_code = "NPL", 
-  python_file = system.file("get_bounding_box_for_iso_code.py", package = "LandUsePLN"),
-  reticulate_python_env = "landuse"
+  python_file = system.file("py/get_bounding_box_for_iso_code.py", package = "LandUsePLN"),
+  reticulate_python_env = "/n/home03/ttapera/.local/share/mamba/envs/landuse"
   ){
 
     # set up reticulate to use the correct python environment
