@@ -19,14 +19,19 @@ Imports:
     cli,
     config,
     fs,
+    geodata,
     here,
     magrittr,
     purrr,
     readr,
+    reticulate,
     stringr,
     targets,
+    terra,
     xfun
 Suggests: 
+    dplyr,
+    geotargets,
     knitr,
     rmarkdown,
     testthat

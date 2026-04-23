@@ -78,6 +78,11 @@ to targets objects via `tarchetypes::tar_tangle()`
 
 Below we define the actual targets of the pipeline using `tar_tangle()`.
 
+> Note: Because we are dealing with geospatial data,
+we cannot define the entire pipeline in a single Rmd as
+normal. Instead, we define the regular targets in this Rmd,
+but for geospatial targets we define them in the targets file explicitly.
+
 ## Config
 
 A YAML config file is used to define parameters for the pipeline. It is contained
@@ -110,14 +115,47 @@ input_files <- link_inputs(cfg_path = cfg_path)
 ```
 
 
-## `geodata` Package Parameters
+## `geodata` Package & Other Additional Parameters
 
 The main pipeline relies on the `geodata` package to download and
 process the ESA WorldCover data. The parameters for the `geodata` 
 functions are defined in the `cfg` above.
 ```{r}
+#| packages:
+#| - config
+#| - tibble
+
+countries <- config::get("inputs", file = cfg_path)$countries
+years <- config::get("inputs", file = cfg_path)$years
+
+land_cover_types <- tribble(
+  ~cover_type,  ~cover_description,         ~column,
+  "trees",      "Tree Cover",               "10",
+  "shrubs",     "Shrubland",                "20",
+  "grassland",  "Grassland",                "30",
+  "cropland",   "Cropland",                 "40",
+  "built",      "Built-up Area",            "50",
+  "bare",       "Bare / Sparse vegetation", "60",
+  "snow",       "Snow and Ice",             "70",
+  "water",      "Permanent Water Bodies",   "80",
+  "wetland",    "Herbacious Wetland",       "90",
+  "mangroves",  "Mangroves",                "95",
+  "moss",       "Moss and Lichen",          "100"
+)
+```
 
 
+```{r}
+#| format: file
+#| packages:
+#| - dplyr
+#| - stringr
+
+mdg_healthshed <- input_files %>%
+  str_subset("healthsheds2022.shp$")
+
+npl_healthshed <- input_files %>%
+  str_subset("SHP_Final.shp$")
 ```
 
 

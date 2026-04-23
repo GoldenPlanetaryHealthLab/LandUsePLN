@@ -35,45 +35,227 @@ landcover_trees
 Clearly this will need a bounding box, since the API
 just fetches data for all the globe. To do this,
 we can reference `graydon`'s bounding boxes in the
-`country-bounding-boxes` package, which we have included as a dependency.
+`country-bounding-boxes` package, which we have included as a dependency in our `conda` environment.
 We source this function with `reticulate` to get the bounding box for Madagascar:
 
 ```{r}
 library(reticulate)
+library(cli)
+library(dplyr)
+library(purrr)
 ```
 
 ```{r}
 source_python("inst/get_bounding_box_for_iso_code.py")
-x <- get_bounding_box_for_iso_code("MDG")
+x <- get_bounding_box_for_iso_code_py("MDG")
 box <- x$bbox
 box
 ```
 
-Great, so that is how we will get the bounding box. How does it
-get used to get a portion of the land use slice?
+Great, so that is how we will get the bounding box. We
+can wrap that in a function:
+    
+```{r development-get_bounding_box_for_iso_code}
+# You can prepare the code of the get_bounding_box_for_iso_code() function here
+```
+  
+```{r function-get_bounding_box_for_iso_code}
+#' Get a country bounding box from an ISO3 code
+#'
+#' Calls a Python helper through `reticulate` to retrieve the bounding box for
+#' a country identified by its ISO3 code. The function attempts to activate the
+#' requested conda environment, sources the Python file, and returns the
+#' bounding box as a named list.
+#' 
+#' @importFrom reticulate use_condaenv source_python
+#' @importFrom cli cli_alert_danger cli_alert_info
+#' @importFrom purrr flatten
+#'
+#' @param iso_code Character scalar giving the ISO3 country code, for example
+#'   `"NPL"`.
+#' @param python_file Character scalar giving the path to the Python script that
+#'   defines `get_bounding_box_for_iso_code_py()`.
+#' @param reticulate_python_env Character scalar giving the name of the conda
+#'   environment to use with `reticulate`.
+#'
+#' @return A named list with four elements: `xmin`, `ymin`, `xmax`, and `ymax`.
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' get_bounding_box_for_iso_code("NPL")
+#' }
+get_bounding_box_for_iso_code <- function(
+  iso_code = "NPL", 
+  python_file = system.file("get_bounding_box_for_iso_code.py", package = "LandUsePLN"),
+  reticulate_python_env = "landuse"
+  ){
+
+    # set up reticulate to use the correct python environment
+    tryCatch({
+      use_condaenv(reticulate_python_env, required = TRUE)
+    }, error = function(e) {
+      cli_alert_danger("Error finding Python environment: {e$message}. The function may not be able to run without the correct Python environment set up.")
+    })
+
+    # source the python function
+    source_python(python_file)
+
+    bbox <- get_bounding_box_for_iso_code_py(iso_code)
+    cli_alert_info("Python return result for {iso_code}: {bbox}")
+
+    bounding_box <- list(
+      xmin = bbox$bbox[1],
+      ymin = bbox$bbox[2],
+      xmax = bbox$bbox[3],
+      ymax = bbox$bbox[4]
+    ) %>%
+      flatten()
+    return(bounding_box)
+
+}
+```
+  
+```{r example-get_bounding_box_for_iso_code}
+get_bounding_box_for_iso_code("NPL")
+```
+  
+```{r tests-get_bounding_box_for_iso_code}
+test_that("get_bounding_box_for_iso_code works", {
+  expect_true(inherits(get_bounding_box_for_iso_code, "function")) 
+})
+```
+
+How does it get used to get a portion of the land use slice?
+In the `terra` package, this is done by cropping the `ext`
+of the raster:
 
 ```{r}
-
+plot(landcover_trees)
 ```
+
+```{r}
+# xmin, xmax, ymin, ymax
+ext(landcover_trees)
+```
+
+So, to crop the raster, we can simply do:
+
+```{r}
+npl_box <- get_bounding_box_for_iso_code("NPL")
+cropper <- rast()
+xmin(cropper) <- npl_box$xmin
+xmax(cropper) <- npl_box$xmax
+ymin(cropper) <- npl_box$ymin
+ymax(cropper) <- npl_box$ymax
+landcover_npl <- crop(landcover_trees, cropper)
+plot(landcover_npl)
+```
+
+Beautiful! A tiny function to wrap this up will make it modular:
+    
+```{r development-crop_landcover_with_box}
+# You can prepare the code of the crop_landcover_with_box() function here
+```
+  
+```{r function-crop_landcover_with_box}
+#' Crop a landcover raster with a bounding box
+#' 
+#' This function takes a landcover raster and a bounding box, and crops the raster to the extent of the bounding box. It also has an option to plot the cropped raster.
+#' 
+#' @importFrom terra rast xmin xmax ymin ymax crop plot
+#' 
+#' @param landcover_raster A `SpatRaster` object representing the landcover data to be cropped.
+#' @param bounding_box A named list with four elements: `xmin`, `ymin`, `xmax`, `ymax`, representing the coordinates of the bounding box to crop to.
+#' @param plot_invisible Logical scalar indicating whether to plot the cropped raster.
+#' 
+#' @return A `SpatRaster` object representing the cropped landcover data.
+#' @export
+crop_landcover_with_box <- function(landcover_raster, bounding_box, plot_invisible=FALSE) {
+  
+  cropper <- rast()
+  xmin(cropper) <- bounding_box$xmin
+  xmax(cropper) <- bounding_box$xmax
+  ymin(cropper) <- bounding_box$ymin
+  ymax(cropper) <- bounding_box$ymax
+  cropped_landcover <- crop(landcover_raster, cropper)
+
+  if(plot_invisible) {
+    plot(cropped_landcover)
+  }
+
+  return(cropped_landcover)
+    
+}
+```
+  
+```{r example-crop_landcover_with_box}
+crop_landcover_with_box(landcover_raster = landcover_trees, bounding_box = get_bounding_box_for_iso_code("NPL"), plot_invisible = TRUE)
+```
+  
+```{r tests-crop_landcover_with_box}
+test_that("crop_landcover_with_box works", {
+  expect_true(inherits(crop_landcover_with_box, "function")) 
+})
+```
+
+This seems good. Now, we can wrap the above procedure in a single function
+that downloads all of the landcover data for a given country:
 
 ```{r development-download_landcover_geodata}
 # Prepare the code of your function here
 ```
 
 ```{r function-download_landcover_geodata}
-#' download_landcover_geodata Title
+#' Download and crop land cover data for a country
 #'
-#' @return 1
+#' Downloads a land cover raster for a specified cover type using
+#' `geodata::landcover()`, retrieves the country's bounding box from its ISO3
+#' code, and crops the raster to that extent.
+#' 
+#' @importFrom geodata landcover
+#' @importFrom terra rast xmin xmax ymin ymax crop
+#'
+#' @param country_code Character scalar giving the ISO3 country code, for
+#'   example `"NPL"`.
+#' @param cover_type Character scalar giving the land cover type to download,
+#'   for example `"trees"`.
+#' @param tmp_path Character scalar giving the directory where the downloaded
+#'   land cover file should be stored. Defaults to `tempdir()`.
+#' @param plot_invisible Logical scalar passed to
+#'   `crop_landcover_with_box()`. Controls whether the crop operation also
+#'   produces a plot.
+#'
+#' @return A cropped land cover raster object returned by
+#'   `crop_landcover_with_box()`.
+#'
 #' @export
-#'
 #' @examples
-download_landcover_geodata <- function() {
-  1
+#' \dontrun{
+#' x <- download_landcover_geodata(country_code = "NPL", cover_type = "trees")
+#' print(x)
+#' }
+download_landcover_geodata <- function(
+  country_code = "NPL",
+  cover_type = "trees",
+  tmp_path = tempdir(),
+  plot_invisible = FALSE
+  ) {
+  
+  # get the full tiff
+  landcover_full <- landcover(cover_type, path = tmp_path)
+  # get the bounding box for the country
+  bounding_box <- get_bounding_box_for_iso_code(country_code)
+  # crop the landcover to the bounding box
+  landcover_cropped <- crop_landcover_with_box(landcover_full, bounding_box, plot_invisible = plot_invisible)
+
+  return(landcover_cropped)
 }
 ```
 
 ```{r examples-download_landcover_geodata}
-download_landcover_geodata()
+download_landcover_geodata("NPL", "grassland")
 ```
 
 ```{r tests-download_landcover_geodata}
@@ -86,6 +268,5 @@ test_that("download_landcover_geodata works", {
 ```{r development-inflate, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly
-fusen::inflate(flat_file = "dev/flat_download_landcover_geodata.Rmd", vignette_name = "Go further")
+fusen::inflate(flat_file = "dev/flat_download_landcover_geodata.Rmd", vignette_name = "Downloading Land Cover with `geodata`", check=FALSE, open=FALSE, clean=TRUE)
 ```
-

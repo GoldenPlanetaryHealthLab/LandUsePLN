@@ -2,7 +2,7 @@ from country_bounding_boxes import (
       country_subunits_by_iso_code
     )
 
-def get_bounding_box_for_iso_code(iso_code):
+def get_bounding_box_for_iso_code_py(iso_code):
     
     subunits = list(country_subunits_by_iso_code(iso_code))
     

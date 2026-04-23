@@ -1,0 +1,80 @@
+---
+title: "flat_calculate_land_use_frac.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+```{r}
+library(terra)
+```
+
+# calculate_land_use_frac
+
+Now, let's surmise that we had multiple types:
+
+```{r}
+npl_grass <- download_landcover_geodata("NPL", "grassland", plot_invisible = TRUE)
+npl_trees <- download_landcover_geodata("NPL", "trees", plot_invisible = TRUE)
+```
+
+How would we know the proportion of the country covered by each
+type? First, we need to merge (concatenate) the two rasters together with the `c()` built-in (where
+the value of each pixel is the land cover type, and there are multiple
+dimensions of land cover type):
+
+```{r}
+grass_trees <- c(npl_grass, npl_trees)
+grass_trees
+```
+
+This is a `SpatRaster` with two layers, one for grass and one for trees.
+
+Now, we can calculate the proportion of the country covered by each type:
+
+```{r}
+
+```
+
+```{r development-calculate_land_use_frac}
+# Prepare the code of your function here
+```
+
+```{r function-calculate_land_use_frac}
+#' calculate_land_use_frac Title
+#'
+#' @return 1
+#' @export
+#'
+#' @examples
+calculate_land_use_frac <- function() {
+  1
+}
+```
+
+```{r examples-calculate_land_use_frac}
+calculate_land_use_frac()
+```
+
+```{r tests-calculate_land_use_frac}
+test_that("calculate_land_use_frac works", {
+  expect_true(inherits(calculate_land_use_frac, "function"))
+})
+```
+
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/flat_calculate_land_use_frac.Rmd", vignette_name = "Go further")
+```
+

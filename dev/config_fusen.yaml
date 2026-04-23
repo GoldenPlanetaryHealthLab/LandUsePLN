@@ -13,6 +13,21 @@ flat_build_local_pipeline.Rmd:
     overwrite: ask
     clean: true
     codecov: false
+flat_download_landcover_geodata.Rmd:
+  path: dev/flat_download_landcover_geodata.Rmd
+  state: active
+  R: R/get_bounding_box_for_iso_code.R
+  tests: tests/testthat/test-get_bounding_box_for_iso_code.R
+  vignettes: vignettes/downloading-land-cover-with-geodata.Rmd
+  inflate:
+    flat_file: dev/flat_download_landcover_geodata.Rmd
+    vignette_name: Downloading Land Cover with `geodata`
+    open_vignette: false
+    check: false
+    document: true
+    overwrite: ask
+    clean: true
+    codecov: false
 flat_link_inputs.Rmd:
   path: dev/flat_link_inputs.Rmd
   state: active
