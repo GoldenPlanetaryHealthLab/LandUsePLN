@@ -53,10 +53,9 @@ tar_source()
 list(
   
   # extract default pipeline from the targets notebook
-  tar_tangle("_target_notebook.Rmd"),
+  tar_tangle("_target_notebook.Rmd")
 
   ## run geodata to fetch land use rasters
-  tar_
 
   # you can now add more targets here if needed, e.g.:
   # tar_target(

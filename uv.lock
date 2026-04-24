@@ -1,0 +1,32 @@
+version = 1
+revision = 3
+requires-python = ">=3.10"
+
+[[package]]
+name = "country-bounding-boxes"
+version = "0.2.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "iso3166" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/98/46/22750bd08b3296d0fceb01a1c73ff20c9f565626cb6bceb9d8829d641519/country-bounding-boxes-0.2.3.tar.gz", hash = "sha256:bbd1f4b029a0c2aa33a69eb4922e908f5af561221d08eeb7b7de4677705e5426", size = 61309, upload-time = "2015-07-14T15:34:57.671Z" }
+
+[[package]]
+name = "iso3166"
+version = "2.1.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/5c/11/b5023c736a185a88ebd0d38646af6f4d1b4c9b91f2ca84e08e5d2bc7ac3c/iso3166-2.1.1.tar.gz", hash = "sha256:fcd551b8dda66b44e9f9e6d6bbbee3a1145a22447c0a556e5d0fb1ad1e491719", size = 12807, upload-time = "2022-07-12T04:07:57.294Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/08/d0/bf18725b8d47f37858ff801f8e4d40c6982730a899725bdb6ded62199954/iso3166-2.1.1-py3-none-any.whl", hash = "sha256:263660b36f8471c42acd1ff673d28a3715edbce7d24b1550d0cf010f6816c47f", size = 9829, upload-time = "2022-07-12T04:07:55.54Z" },
+]
+
+[[package]]
+name = "landusepln"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "country-bounding-boxes" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "country-bounding-boxes", specifier = ">=0.2.3" }]

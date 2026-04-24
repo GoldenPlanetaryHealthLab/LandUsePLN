@@ -101,7 +101,7 @@ build_local_pipeline <- function(
   targets_file <- here(targets_file_name)
 
   # fetch this installed vignette
-  vignette_path <- system.file(vignette_name, package = pkg_name)
+  vignette_path <- system.file(paste0("extdata/", vignette_name), package = pkg_name)
 
   # assert that the vignette exists
   if (!file_exists(vignette_path)) {
@@ -199,7 +199,7 @@ process the ESA WorldCover data. The parameters for the `geodata`
 functions are defined in the `cfg` above.
 
 ```{r, eval=FALSE}
-#| packages: [config, tibble]
+#| packages: [config, tibble, tidyr]
 countries <- config::get("inputs", file = cfg_path)$countries
 years <- config::get("inputs", file = cfg_path)$years
 
@@ -278,9 +278,4 @@ which you can then use for all of your downstream analyses.
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly
 fusen::inflate(flat_file = "dev/flat_build_local_pipeline.Rmd", vignette_name = "Pipeline Definition", check=FALSE, open=FALSE, clean=TRUE)
-```
-
-```{r development-copy, eval=FALSE}
-# Also copy the pipeline-definition.Rmd to inst/
-fs::file_copy("vignettes/pipeline-definition.Rmd", "inst/pipeline-definition.Rmd", overwrite = TRUE)
 ```

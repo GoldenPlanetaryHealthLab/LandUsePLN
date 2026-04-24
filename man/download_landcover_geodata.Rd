@@ -8,7 +8,7 @@ download_landcover_geodata(
   country_code = "NPL",
   cover_type = "trees",
   tmp_path = tempdir(),
-  reticulate_python_env = "/n/home03/ttapera/.local/share/mamba/envs/landuse",
+  reticulate_python_env = "/n/home03/ttapera/.local/share/mamba/envs/landuse-dev",
   plot_invisible = FALSE
 )
 }

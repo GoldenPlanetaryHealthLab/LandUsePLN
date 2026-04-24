@@ -31,7 +31,7 @@ build_local_pipeline <- function(
   targets_file <- here(targets_file_name)
 
   # fetch this installed vignette
-  vignette_path <- system.file(vignette_name, package = pkg_name)
+  vignette_path <- system.file(paste0("extdata/", vignette_name), package = pkg_name)
 
   # assert that the vignette exists
   if (!file_exists(vignette_path)) {

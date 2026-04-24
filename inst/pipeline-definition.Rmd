@@ -126,6 +126,7 @@ functions are defined in the `cfg` above.
 #| packages:
 #| - config
 #| - tibble
+#| - tidyr
 
 countries <- config::get("inputs", file = cfg_path)$countries
 years <- config::get("inputs", file = cfg_path)$years

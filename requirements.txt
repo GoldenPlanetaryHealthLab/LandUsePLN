@@ -1,0 +1,8 @@
+country-bounding-boxes==0.2.3
+gdal @ file:///home/conda/feedstock_root/build_artifacts/libgdal-core_1775925699505/work/build/swig/python
+iso3166==2.1.1
+numpy @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_numpy_1773839284/work/dist/numpy-2.4.3-cp312-cp312-linux_x86_64.whl
+packaging @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_packaging_1776209387/work
+pip @ file:///home/conda/feedstock_root/build_artifacts/pip_1770270195740/work
+setuptools==82.0.1
+wheel==0.47.0

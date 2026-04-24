@@ -124,6 +124,7 @@ functions are defined in the `cfg` above.
 #| packages:
 #| - config
 #| - tibble
+#| - tidyr
 
 countries <- config::get("inputs", file = cfg_path)$countries
 years <- config::get("inputs", file = cfg_path)$years
@@ -205,5 +206,4 @@ on FASRC that we symlinked earlier.
 
 Finally, we extract the land use data for each healthshed polygon. This is the main output of the pipeline,
 which you can then use for all of your downstream analyses.
-
 
