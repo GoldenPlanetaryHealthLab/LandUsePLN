@@ -16,7 +16,7 @@
     "r.alwaysUseActiveTerminal": true,
     "r.rpath.linux": "/n/home03/ttapera/.local/share/mamba/envs/landuse/bin/R",
     "r.libPaths": [
-        "/n/home03/ttapera/.cache/R/renv/library/LandUsePLN-2ab2285e/linux-rocky-8.10/R-4.5/x86_64-pc-linux-gnu",
-        "/n/home03/ttapera/.cache/R/renv/sandbox/linux-rocky-8.10/R-4.5/x86_64-pc-linux-gnu/ad50b12d"
+        "/n/home03/ttapera/.cache/R/renv/library/LandUsePLN-2ab2285e/linux-rocky-8.10/R-4.5/x86_64-conda-linux-gnu",
+        "/n/home03/ttapera/.cache/R/renv/sandbox/linux-rocky-8.10/R-4.5/x86_64-conda-linux-gnu/b0b66537"
     ]
 }

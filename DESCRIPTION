@@ -1,22 +1,40 @@
 Package: LandUsePLN
-Version: 0.0.0.9000
 Title: Access Land Use Data in R
-Description: This pipeline provides access to land use data endpoints. It is designed to be flexible and adaptable 
-    to various data sources and formats, allowing users to easily retrieve and analyze land use data for their specific needs.
-    The current pipeline retrieves land use data from the [ESA World Cover](https://esa-worldcover.org/en) dataset.
-Authors@R: c(person(given = c("Tinashe", "Michael"),
-         family = "Tapera",
-         role = c("aut", "cre"),
-         email = "ttapera@hsph.harvard.edu"),
-  person(given = "Christina",
-         family = "Draeger",
-         role = "com",
-         email = "christina.draeger@posteo.de"),
-  person(given = "Christopher",
-         family = "Golden",
-         role = "cph",
-         email = "golden@hsph.harvard.edu"))
+Version: 0.0.0.9000
+Authors@R: c(
+    person(c("Tinashe", "Michael"), "Tapera", , "ttapera@hsph.harvard.edu", role = c("aut", "cre")),
+    person("Christina", "Draeger", , "christina.draeger@posteo.de", role = "com"),
+    person("Christopher", "Golden", , "golden@hsph.harvard.edu", role = "cph")
+  )
+Description: This pipeline provides access to land use data endpoints. It
+    is designed to be flexible and adaptable to various data sources and
+    formats, allowing users to easily retrieve and analyze land use data
+    for their specific needs.  The current pipeline retrieves land use
+    data from the [ESA World Cover](https://esa-worldcover.org/en)
+    dataset.
 License: MIT + file LICENSE
+Imports: 
+    cli,
+    config,
+    fs,
+    geodata,
+    here,
+    magrittr,
+    purrr,
+    readr,
+    reticulate,
+    stringr,
+    targets,
+    terra,
+    xfun
+Suggests: 
+    dplyr,
+    knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: 
+    knitr
+Config/fusen/version: 0.7.2
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3

@@ -8,14 +8,6 @@
 \description{
 This pipeline provides access to land use data endpoints. It is designed to be flexible and adaptable to various data sources and formats, allowing users to easily retrieve and analyze land use data for their specific needs. The current pipeline retrieves land use data from the [ESA World Cover](https://esa-worldcover.org/en) dataset.
 }
-\seealso{
-Useful links:
-\itemize{
-  \item \url{https://github.com/TinasheMTapera/LandUsePLN}
-  \item Report bugs at \url{https://github.com/TinasheMTapera/LandUsePLN/issues}
-}
-
-}
 \author{
 \strong{Maintainer}: Tinashe Michael Tapera \email{ttapera@hsph.harvard.edu}
 

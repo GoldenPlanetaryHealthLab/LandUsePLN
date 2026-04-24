@@ -142,6 +142,8 @@ land_cover_types <- tribble(
   "mangroves",  "Mangroves",                "95",
   "moss",       "Moss and Lichen",          "100"
 )
+
+data_spread <- crossing(countries, years, land_cover_types)
 ```
 
 
@@ -163,8 +165,15 @@ npl_healthshed <- input_files %>%
 
 Next, we get the land use data for the specified countries and years using the `geodata` package.
 ```{r}
+#| pattern: map(data_spread)
 
-
+land_cover <- download_landcover_geodata(
+  country_code = countries,
+  cover_type = cover_type,
+  tmp_path = tempdir(),
+  reticulate_python_env = Sys.getenv("MAMBA_ENV_PATH"),
+  plot_invisible = FALSE
+)
 ```
 
 
