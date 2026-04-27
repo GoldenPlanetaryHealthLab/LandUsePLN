@@ -245,6 +245,8 @@ download_landcover_geodata <- function(
   reticulate_python_env = "/n/home03/ttapera/.local/share/mamba/envs/landuse-dev",
   plot_invisible = FALSE
   ) {
+
+  print(paste("Downloading land cover data for", country_code, "with cover type", cover_type))
   
   # get the full tiff
   landcover_full <- landcover(cover_type, path = tmp_path)

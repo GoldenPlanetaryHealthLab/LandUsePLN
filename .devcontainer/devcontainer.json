@@ -1,0 +1,20 @@
+{
+  "name": "LandUsePLN",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  "remoteUser": "vscode",
+  "containerUser": "vscode",
+  "workspaceMount": "source=/n/netscratch/cgolden_lab/Lab/projects/tinashe_land_use/LandUsePLN,target=/workspaces/LandUsePLN,type=bind,consistency=cached",
+  "workspaceFolder": "/workspaces/LandUsePLN",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "REditorSupport.r",
+        "quarto.quarto"
+      ]
+    }
+  }
+}

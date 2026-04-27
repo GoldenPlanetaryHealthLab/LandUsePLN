@@ -1,4 +1,6 @@
 {
+    "dev.containers.dockerPath": "podman",
+    "dev.containers.dockerComposePath": "podman-compose",
     "python.terminal.activateEnvInCurrentTerminal": true,
     "terminal.integrated.defaultProfile.linux": "bash",
     "terminal.integrated.profiles.linux": {

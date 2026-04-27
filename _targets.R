@@ -53,10 +53,34 @@ tar_source()
 list(
   
   # extract default pipeline from the targets notebook
-  tar_tangle("_target_notebook.Rmd")
+  tar_tangle("_target_notebook.Rmd"),
+
+  # grouped targets
+  tar_target(
+    name = data_spread_grps,
+    packages = c("dplyr", "targets"),
+    command = {
+      data_spread %>%
+        group_by(countries, years, cover_type) %>%
+        tar_group()
+    }
+  ),
 
   ## run geodata to fetch land use rasters
-
+  tar_terra_rast(
+    land_use,
+    pattern = map(data_spread_grps),
+    packages = c("geodata", "terra", "cli", "reticulate", "purrr"),
+    command = {
+      download_landcover_geodata(
+        country_code = data_spread_grps$countries,
+        cover_type = data_spread_grps$cover_type,
+        tmp_path = tempdir(),
+        reticulate_python_env = uv_python_path,
+        plot_invisible = FALSE
+      )
+    }
+  )
   # you can now add more targets here if needed, e.g.:
   # tar_target(
   #   name = data,

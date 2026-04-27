@@ -16,6 +16,11 @@ pkgload::load_all(export_all = FALSE)
 
 ```{r}
 library(terra)
+library(dplyr)
+library(targets)
+library(here)
+
+tar_load(land_use, branches = 1:2, store = here("_targets"))
 ```
 
 # calculate_land_use_frac
@@ -23,18 +28,29 @@ library(terra)
 Now, let's surmise that we had multiple types:
 
 ```{r}
-npl_grass <- download_landcover_geodata("NPL", "grassland", plot_invisible = TRUE)
-npl_trees <- download_landcover_geodata("NPL", "trees", plot_invisible = TRUE)
+land_type_1 <- land_use$land_use_90929f80e69014c8
+land_type_2 <- land_use$land_use_d5272583bc0e6381
+plot(land_type_1)
+plot(land_type_2)
 ```
 
 How would we know the proportion of the country covered by each
-type? First, we need to merge (concatenate) the two rasters together with the `c()` built-in (where
-the value of each pixel is the land cover type, and there are multiple
-dimensions of land cover type):
+type? First, we need to merge (concatenate) the two rasters together 
+with `merge()`:
 
 ```{r}
-grass_trees <- c(npl_grass, npl_trees)
-grass_trees
+merged <- merge(land_type_1, land_type_2)
+plot(merged)
+```
+
+Then, we need an aggregation object to calculate
+the proportion of the country covered by each type.
+
+To do this, we can fetch the healthsheds for madagascar:
+
+```{r}
+hlthshed <- tar_read(mdg_healthshed, store = here("_targets")) %>%
+  read_sf()
 ```
 
 This is a `SpatRaster` with two layers, one for grass and one for trees.
