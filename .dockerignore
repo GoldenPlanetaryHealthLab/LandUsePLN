@@ -1,0 +1,16 @@
+# Python
+.venv
+__pycache__/
+*.pyc
+
+# R / rv local library
+rv/library
+.rv
+
+# Git and editor noise
+.git
+.Rproj.user
+.env
+.DS_Store
+
+sandbox
