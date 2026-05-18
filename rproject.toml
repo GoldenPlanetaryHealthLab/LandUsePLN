@@ -15,5 +15,19 @@ repositories = [
     # {name = "dplyr", repository = "CRAN"},
     # {name = "dplyr", git = "https://github.com/tidyverse/dplyr.git", tag = "v1.1.4"},
 dependencies = [
-
+    "targets",
+    "jsonlite",
+    "languageserver",
+    "fusen",
+    "Rcpp",
+    "tarchetypes",
+    "skimr",
+    "digest",
+    "janitor",
+    "httpgd",
+    "geotargets",
+    "config",
+    "reticulate",
+    "geodata",
+    "readr",
 ]

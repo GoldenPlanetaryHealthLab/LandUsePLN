@@ -112,7 +112,7 @@ The GDrive date we're looking for is healthshed files, which we discuss in more 
 #| - purrr
 #| - cli
 
-input_files <- link_inputs(cfg_path = cfg_path)
+input_files <- list.files(here("data"), recursive=TRUE, full.names=TRUE)
 ```
 
 
@@ -187,10 +187,9 @@ Next, we get the land use data for the specified countries and years using the `
 ## Merge the .tiff Files
 
 Importantly, we merge the .tiff files into a single file per country-year. This used to
-be done with the `gdal` library at the command line with the tool `gdal_merge.py`,
-but that would necessitate going around the bend to install `gdal` on the local machine.
-Instead, we install and make use of the `terra` package in R, which has superceded
-`rgdal` for geospatial data processing in R and keeps our pipeline language-opinionated and contained.
+be done with the `gdal` library at the command line with the tool `gdal_merge.py`.
+To keep this R-centric, we're instead using the terra package as demonstrated
+in the function `merge_landcover_geodata()`, which is called in the targets file directly.
 ```{r}
 #| eval: no
 

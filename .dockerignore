@@ -13,4 +13,13 @@ rv/library
 .env
 .DS_Store
 
+.venv
+__pycache__
+*.pyc
+.git
+.ruff_cache
+.pytest_cache
+.mypy_cache
+.ipynb_checkpoints
+
 sandbox

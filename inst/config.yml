@@ -1,3 +1,5 @@
+profiles:
+  local:
 default:
   # the default pipeline comes from https://esa-worldcover.org/en
   inputs:

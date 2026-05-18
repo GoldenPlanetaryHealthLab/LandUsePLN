@@ -189,7 +189,7 @@ The GDrive date we're looking for is healthshed files, which we discuss in more 
 #| format: file
 #| packages: [here, purrr, cli]
 
-input_files <- link_inputs(cfg_path = cfg_path)
+input_files <- list.files(here("data"), recursive=TRUE, full.names=TRUE)
 ```
 
 ## `geodata` Package & Other Additional Parameters
